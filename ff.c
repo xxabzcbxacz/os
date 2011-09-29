@@ -128,5 +128,6 @@ int main(int argc, char **args)
 		}
 		printf("%d\n",A[i]);
 	}
+	free(A);
 	return 0;
 }
