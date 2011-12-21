@@ -50,7 +50,7 @@ int read(FILE *f)
 			w=1;
 			continue;
 		}
-		if (c!='\r'&&c!='\n'&&c!=EOF)
+		if (c!='\r'&&c!='\n'&&c!=' '&&c!='\t'&&c!=EOF)
 			return ERR_TRASH;
 		if (w)
 		{
@@ -67,7 +67,7 @@ int read(FILE *f)
 int main(int argc, char **args)
 {
 	int i,r,m;
-	FILE *f;
+	FILE *f=0;
 	AC=0;
 	AS=4;
 	A=(int*)malloc(sizeof(int)*AS);
@@ -92,26 +92,28 @@ int main(int argc, char **args)
 					printf("Trash in file \"%s\"\n",args[i]);
 				break;
 				case ERR_FERR:
-					printf("Error while read file \"%s\"\n",args[i]);
+					printf("Error while reading file \"%s\"\n",args[i]);
 				break;
 				case ERR_NEMEM:
 					printf("Not enough memory while reading file \"%s\"\n",args[i]);
 				break;
 				}
 				if (fclose(f))
+				{
 					printf("Can't close file \"%s\"\n",args[i]);
-				return 0;
+					goto err;
+				}
 			}
 			if (fclose(f))
 			{
 				printf("Can't close file \"%s\"\n",args[i]);
-				return 0;
+				goto err;
 			}
 		}
 		else
 		{
 			printf("Can't open file \"%s\"\n",args[i]);
-			return 0;
+			goto err;
 		}
 	}
 	for (i=0; i<AC; ++i)
@@ -128,6 +130,8 @@ int main(int argc, char **args)
 		}
 		printf("%d\n",A[i]);
 	}
+
+err:
 	free(A);
 	return 0;
 }
